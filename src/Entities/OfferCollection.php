@@ -5,11 +5,14 @@ use Iterator;
 
 use Exception;
 use ArrayObject;
+use Metro\Cli\Logger\Logger as Logger;
 use Metro\Cli\Entities\Offer as Offer;
 use Metro\Cli\Interfaces\OfferInterface as OfferInterface;
 use Metro\Cli\Interfaces\OfferCollectionInterface as OfferCollectionInterface;
 
 class OfferCollection implements OfferCollectionInterface {
+
+    public $logger;
 
     /**
      * offers array
@@ -25,6 +28,8 @@ class OfferCollection implements OfferCollectionInterface {
      */
     public function __construct(array $offers)
     {
+        $this->logger = Logger::getInstance();
+        $this->logger->info('Mapping data to offer collection');
         foreach ($offers as $key => $item) {
             $this->add(
                 new Offer(
@@ -67,6 +72,7 @@ class OfferCollection implements OfferCollectionInterface {
      * @return Iterator
      */
     public function getIterator(): Iterator {
+        $this->logger->info('getting collection offer iterator');
         $obj = new ArrayObject($this->offers);
         return $obj->getIterator();
     }

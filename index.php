@@ -9,9 +9,17 @@ use Metro\Cli\Filters\DateFilter as DateFilter;
 use Metro\Cli\Filters\PriceFilter as PriceFilter;
 use Metro\Cli\Filters\VendorFilter as VendorFilter;
 use Metro\Cli\Readers\JsonReader as JsonReader;
+use Metro\Cli\Logger\Logger as Logger;
+
+
+
+
+// preparing console paramters
+$console_args = array_filter($argv, function($var){return !(strpos($var, '-') === 0);});
+$console_args = array_merge($console_args, array());
 
 // get console paramters
-list($script, $function_name, $first_parameter, $second_parameter) = $argv;
+list($script, $function_name, $first_parameter, $second_parameter) = $console_args;
 
 $range_functions = array('date_filter' ,'price_filter');
 
@@ -19,20 +27,33 @@ $all_functions = array_merge($range_functions, array('vendor_offers_count'));
 
 $remote_url = 'demo.json';
 
+$logger = Logger::getInstance();
+
 try {
+    
+    // get console options
+    $options = getopt("vp:hp:");
+    
+    // trigger help message
+    if (isset($options['h'])) {
+        throw new Exception('help needed!');
+    }
 
     // check if function supported
     if (
-        count($argv) < 3
+        count($console_args) < 4
     ) {
-        throw new Exception('not supported!');
+        $logger->error('number of parameters is less than 3');
+        throw new Exception('number of parameters is less than 3');
+        return;
     }
 
     // check if function supported
     if (
         !in_array($function_name, $all_functions)
     ) {
-        throw new Exception('not supported!');
+        $logger->error('requested function is not permitted');
+        throw new Exception('requested function is not permitted');
     }
 
     // check if function parameters exists for range filters
@@ -42,14 +63,16 @@ try {
             $first_parameter || $second_parameter
         )
     ) {
-        throw new Exception('function paramters are missing!');
+        $logger->error('one or more range parameters are missing');
+        throw new Exception('one or more range parameters are missing');
     }
 
     // check if function parameter exists for vendor filter
     if (
         $function_name == 'vendor_offers_count' && !$first_parameter
     ) {
-        throw new Exception('function paramter is missing!');
+        $logger->error('vendor id parameter is missing');
+        throw new Exception('vendor id parameter is missing');
     }
 
     $supported_functions = array(

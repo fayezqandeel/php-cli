@@ -3,9 +3,13 @@ namespace Metro\Cli\Filters;
 
 use Iterator;
 use ArrayObject;
+use Metro\Cli\Logger\Logger as Logger;
+use Metro\Cli\Entities\Offer as Offer;
 use Metro\Cli\Interfaces\OfferFilterInterface as OfferFilterInterface;
 
 class DateFilter implements OfferFilterInterface {
+
+    public $logger;
 
     /**
      * filtered offers
@@ -27,6 +31,12 @@ class DateFilter implements OfferFilterInterface {
      * @var string
      */
     private $end;
+
+    public function __construct()
+    {
+        $this->logger = Logger::getInstance();
+        $this->logger->info('Start filtering by date...');
+    }
 
     /**
      * get start paramter
@@ -87,6 +97,7 @@ class DateFilter implements OfferFilterInterface {
             }
             $iterator->next();
         }
+        $this->logger->success('found ' . count($this->filtered) . 'matches');
     }
 
     /**

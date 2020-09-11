@@ -78,7 +78,6 @@ class PriceFilter implements OfferFilterInterface {
         $iterator->rewind();
         while ($iterator->valid()) {
             $offer = $iterator->current();
-            var_dump($this->getEnd() , $offer->getPrice());
             if (
                 $offer->getPrice() >= $this->getStart() &&
                 $offer->getPrice() <= $this->getEnd() &&

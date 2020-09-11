@@ -1,12 +1,12 @@
 ###### Install dependencies:
 
-```bash
+```
 composer Install
 ```
 
 ###### Examples
 
-```bash
+```sh
 $ php index.php date_filter 2019-03-01T10:00 2019-03-21T19:00 
 $ php index.php price_filter 10.00 100.00 
 $ php run.php vendor_offers_count <$vendor_id>
@@ -15,6 +15,6 @@ $ php run.php vendor_offers_count <$vendor_id>
 
 ###### Run Tests
 
-```bash
+```sh
 ./vendor/bin/phpunit tests
 ```
